@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetClientApiGenerator", "DotNetClientApiGenerator\DotNetClientApiGenerator.csproj", "{77CE923C-C0D9-43B6-AFC5-2B6F3BCE49C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalR.ApiGenerator.Abstract", "SignalR.ApiGenerator.Abstract\SignalR.ApiGenerator.Abstract.csproj", "{2B5BD3A6-237F-4AB8-AA3F-D929BC2082A3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77CE923C-C0D9-43B6-AFC5-2B6F3BCE49C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77CE923C-C0D9-43B6-AFC5-2B6F3BCE49C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77CE923C-C0D9-43B6-AFC5-2B6F3BCE49C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77CE923C-C0D9-43B6-AFC5-2B6F3BCE49C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B5BD3A6-237F-4AB8-AA3F-D929BC2082A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5BD3A6-237F-4AB8-AA3F-D929BC2082A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5BD3A6-237F-4AB8-AA3F-D929BC2082A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5BD3A6-237F-4AB8-AA3F-D929BC2082A3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
