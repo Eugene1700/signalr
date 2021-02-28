@@ -17,4 +17,10 @@
       <ProjectReference Include="..\SignalR.ApiGenerator.Abstract\SignalR.ApiGenerator.Abstract.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="defaultConfig.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

@@ -2,5 +2,6 @@
   "TargetFilePath": "ApiHubConnection.gen.cs",
   "TargetClassName" : "ApiHubConnection",
   "TargetNamespace" : "ApiHubConnectionNs",
-  "TypeSourceCsPath" : ""
+  "TypeSourceCsPath" : "",
+  "SourceAssemblyPath" : ""
 }

@@ -1,4 +1,4 @@
-﻿namespace Tamara.Mobile.HubConnectionApiGenerator
+﻿namespace DotNetClientApiGenerator
 {
     public class GeneratorConfig
     {

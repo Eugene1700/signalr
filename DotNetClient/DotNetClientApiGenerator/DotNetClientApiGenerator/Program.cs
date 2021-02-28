@@ -12,7 +12,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using SignalR.ApiGenerator.Abstract;
-using Tamara.Mobile.HubConnectionApiGenerator;
 
 namespace DotNetClientApiGenerator
 {
