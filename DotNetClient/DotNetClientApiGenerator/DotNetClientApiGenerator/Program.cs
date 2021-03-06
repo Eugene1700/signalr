@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -12,6 +13,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json;
 using SignalR.ApiGenerator.Abstract;
+using Microsoft.Extensions.DependencyModel;
+
 
 namespace DotNetClientApiGenerator
 {
@@ -32,10 +35,12 @@ namespace DotNetClientApiGenerator
             var className = config.TargetClassName;
             var outPutFilePath = config.TargetFilePath;
             var typesSourceFile = config.TypeSourceCsPath;
-            var assemblyPath = config.SourceAssemblyPath;
+            var assemblyPath = Path.GetFullPath(config.SourceAssemblyPath);
             if (!File.Exists(assemblyPath))
                 throw new InvalidOperationException($"Assembly [{assemblyPath}] not found");
-            var assembly = Assembly.LoadFile(assemblyPath);
+            var asl = new AssemblyLoader(Path.GetDirectoryName(assemblyPath));
+            // var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(assemblyPath);
+            var assembly = asl.LoadFromAssemblyPath(assemblyPath);
             var hubType = assembly.GetTypes().FirstOrDefault(x => x.IsSubclassOf(typeof(Hub)));
             if (hubType == null)
                 throw new InvalidOperationException($"Subtype of Hub not found");
@@ -78,11 +83,15 @@ namespace DotNetClientApiGenerator
                 Console.WriteLine("Dumping source...");
                 Console.WriteLine(output);
 
-                Console.WriteLine("Backup");
-                var backupPath = outputFilePath + ".bak";
-                File.Delete(backupPath);
-                File.Copy(outputFilePath, backupPath);
-                File.Delete(outputFilePath);
+                string backupPath = "";
+                if (File.Exists(outputFilePath))
+                {
+                    Console.WriteLine("Backup");
+                    backupPath = outputFilePath + ".bak";
+                    File.Delete(backupPath);
+                    File.Copy(outputFilePath, backupPath);
+                    File.Delete(outputFilePath);
+                }
 
                 Console.WriteLine("Writing source to file...");
                 Stream s = File.Open(outputFilePath, FileMode.OpenOrCreate);
@@ -90,7 +99,8 @@ namespace DotNetClientApiGenerator
                 t.Write(output);
                 t.Close();
                 s.Close();
-                File.Delete(backupPath);
+                if (!string.IsNullOrWhiteSpace(backupPath))
+                    File.Delete(backupPath);
             }
             catch (Exception e)
             {
@@ -199,6 +209,36 @@ namespace DotNetClientApiGenerator
                 res.MarkCodeMemberMethodAsAsync();
             res.Parameters.AddRange(pars.GetCodeParameters(ns, declaredTypes));
             return res;
+        }
+    }
+    
+    public class AssemblyLoader : AssemblyLoadContext
+    {
+        private readonly string _folderPath;
+
+        public AssemblyLoader(string folderPath)
+        {
+            _folderPath = folderPath;
+        }
+
+        protected override Assembly Load(AssemblyName assemblyName)
+        {
+            var deps = DependencyContext.Default;
+            var res = deps.CompileLibraries.Where(d => d.Name.Contains(assemblyName.Name)).ToList();
+            if (res.Count > 0)
+            {
+                return Assembly.Load(new AssemblyName(res.First().Name));
+            }
+            else
+            {
+                var apiApplicationFileInfo = new FileInfo($"{_folderPath}{Path.DirectorySeparatorChar}{assemblyName.Name}.dll");
+                if (File.Exists(apiApplicationFileInfo.FullName))
+                {
+                    var asl = new AssemblyLoader(apiApplicationFileInfo.DirectoryName);
+                    return asl.LoadFromAssemblyPath(apiApplicationFileInfo.FullName);
+                }
+            }
+            return Assembly.Load(assemblyName);
         }
     }
 }
